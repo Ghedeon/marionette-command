@@ -8,7 +8,7 @@ public class GameMain {
 
         matrix.print();
 
-        matrix.moveRight();
+        matrix.moveLeft();
 
         System.out.println("after");
         matrix.print();

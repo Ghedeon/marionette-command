@@ -70,6 +70,53 @@ public class Matrix {
         }
     }
 
+    public void moveLeft() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for (int k = 0; k < SIZE; k++) {
+
+                    boolean isTile = mMatrix[i][j][k] != 0;
+                    if (!isTile) {
+                        continue;
+                    }
+
+                    boolean onMargin = k <= 0;
+                    if (onMargin) {
+                        continue;
+                    }
+
+                    boolean uncompNeighPresent = false;
+                    boolean compNeighPresent = false;
+                    boolean foundNeighbour = false;
+                    int neighX = 0;
+                    for (int l = k-1; l >= 0; l--) {
+                        if (!foundNeighbour) {
+                            if (mMatrix[i][j][l] != 0) {
+                                if (mMatrix[i][j][l] != mMatrix[i][j][k]) {
+                                    uncompNeighPresent = true;
+                                } else {
+                                    compNeighPresent = true;
+                                }
+                                neighX = l;
+                                foundNeighbour = true;
+                            }
+                        }
+                    }
+
+                    if (!uncompNeighPresent && !compNeighPresent) {
+                        swap(k, j, i, 0, j, i);
+                    }
+                    if (uncompNeighPresent) {
+                        swap(k, j, i, neighX + 1, j, i);
+                    }
+                    if (compNeighPresent) {
+                        merge(k, j, i, neighX, j, i);
+                    }
+                }
+            }
+        }
+    }
+
     private void swap(int x, int y, int z, int x1, int y1, int z1) {
         if (!(x == x1 && y == y1 && z == z1)) {
             mMatrix[z1][y1][x1] = mMatrix[z][y][x];
