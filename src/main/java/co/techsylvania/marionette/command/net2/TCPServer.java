@@ -34,12 +34,10 @@ public class TCPServer extends Thread {
     }
 
     public void sendCommands() throws IOException {
+        final ObjectOutputStream ooStream = new ObjectOutputStream(tcpSocket.getOutputStream());
         for (int i = 0; i <10; i++) {
-            final ObjectOutputStream ooStream = new ObjectOutputStream(tcpSocket.getOutputStream());
-            String message = "szia";
             System.out.println("Writing CommandType.MOVE_LEFT");
             ooStream.writeObject(new Command(CommandType.MOVE_LEFT, new byte[0]));
-            ooStream.flush();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
