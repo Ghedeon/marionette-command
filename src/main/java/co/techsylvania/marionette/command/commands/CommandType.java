@@ -1,4 +1,4 @@
-package co.techsylvania.marionette.command;
+package co.techsylvania.marionette.command.commands;
 
 public enum CommandType {
 
