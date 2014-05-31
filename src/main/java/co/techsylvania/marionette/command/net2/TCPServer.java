@@ -34,7 +34,7 @@ public class TCPServer extends Thread {
             String message = "szia";
             System.out.println("Writing: " + message);
             writer.println(message);
-            writer.close();
+            writer.flush();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -44,7 +44,8 @@ public class TCPServer extends Thread {
     }
 	
 	public void closeServer() throws IOException{
-		tcpSocket.close();
+        tcpSocket.getOutputStream().close();
+        tcpSocket.close();
 		System.out.println("Server closed"); 
 	}
 }
