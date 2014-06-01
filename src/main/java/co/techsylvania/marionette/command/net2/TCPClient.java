@@ -2,7 +2,9 @@ package co.techsylvania.marionette.command.net2;
 
 import co.techsylvania.marionette.command.game2048.GameModel;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -31,19 +33,20 @@ public class TCPClient extends Thread {
     }
 
     public void receiveMessages() throws IOException, ClassNotFoundException {
-        final ObjectInputStream oiStream = new ObjectInputStream(client_socket.getInputStream());
+        final BufferedInputStream oiStream = new BufferedInputStream(client_socket.getInputStream());
         boolean tocontinue = true;
         while (tocontinue) {
-            GameModel gameModel = (GameModel) oiStream.readObject();
-            if (gameModel == null) {
-                continue;
-            }
-            System.out.println("Recd: " + gameModel.getScore());
+            byte[] gameModel = new byte[71];
+            int result = oiStream.read(gameModel, 0, 71);
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if (result == -1) {
+                continue;
+            }
+            System.out.println("Recd: " + gameModel.toString());
         }
         oiStream.close();
     }

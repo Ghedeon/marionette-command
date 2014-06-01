@@ -384,6 +384,10 @@ public class Matrix {
         return mMatrix.clone();
     }
 
+    public boolean isWon() {
+        return getMaxTile() >= 2048;
+    }
+
     public void print() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
