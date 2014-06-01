@@ -117,6 +117,190 @@ public class Matrix {
         }
     }
 
+    public void moveDown() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int k = 0 ; k < SIZE; k++) {
+            for (int j = SIZE - 1; j >= 0; j--) {
+                    boolean isTile = mMatrix[i][j][k] != 0;
+                    if (!isTile) {
+                        continue;
+                    }
+
+                    boolean onMargin = j >= SIZE - 1;
+                    if (onMargin) {
+                        continue;
+                    }
+
+                    boolean uncompNeighPresent = false;
+                    boolean compNeighPresent = false;
+                    boolean foundNeighbour = false;
+                    int neighX = 0;
+                    for (int l = j+1; l < SIZE; l++) {
+                        if (!foundNeighbour) {
+                            if (mMatrix[i][l][k] != 0) {
+                                if (mMatrix[i][l][k] != mMatrix[i][j][k]) {
+                                    uncompNeighPresent = true;
+                                } else {
+                                    compNeighPresent = true;
+                                }
+                                neighX = l;
+                                foundNeighbour = true;
+                            }
+                        }
+                    }
+
+                    if (!uncompNeighPresent && !compNeighPresent) {
+                        swap(k, j, i, k, SIZE - 1, i);
+                    }
+                    if (uncompNeighPresent) {
+                        swap(k, j, i, k, neighX - 1, i);
+                    }
+                    if (compNeighPresent) {
+                        merge(k, j, i, k, neighX, i);
+                    }
+                }
+            }
+        }
+    }
+
+    public void moveUp() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int k = 0 ; k < SIZE; k++) {
+                for (int j = 0; j < SIZE; j++) {
+                    boolean isTile = mMatrix[i][j][k] != 0;
+                    if (!isTile) {
+                        continue;
+                    }
+
+                    boolean onMargin = j <= 0;
+                    if (onMargin) {
+                        continue;
+                    }
+
+                    boolean uncompNeighPresent = false;
+                    boolean compNeighPresent = false;
+                    boolean foundNeighbour = false;
+                    int neighX = 0;
+                    for (int l = j-1; l >= 0; l--) {
+                        if (!foundNeighbour) {
+                            if (mMatrix[i][l][k] != 0) {
+                                if (mMatrix[i][l][k] != mMatrix[i][j][k]) {
+                                    uncompNeighPresent = true;
+                                } else {
+                                    compNeighPresent = true;
+                                }
+                                neighX = l;
+                                foundNeighbour = true;
+                            }
+                        }
+                    }
+
+                    if (!uncompNeighPresent && !compNeighPresent) {
+                        swap(k, j, i, k, 0, i);
+                    }
+                    if (uncompNeighPresent) {
+                        swap(k, j, i, k, neighX + 1, i);
+                    }
+                    if (compNeighPresent) {
+                        merge(k, j, i, k, neighX, i);
+                    }
+                }
+            }
+        }
+    }
+
+    public void moveBackward() {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < SIZE; k++) {
+                for (int i = SIZE - 1; i >= 0; i--) {
+                    boolean isTile = mMatrix[i][j][k] != 0;
+                    if (!isTile) {
+                        continue;
+                    }
+
+                    boolean onMargin = i >= SIZE - 1;
+                    if (onMargin) {
+                        continue;
+                    }
+
+                    boolean uncompNeighPresent = false;
+                    boolean compNeighPresent = false;
+                    boolean foundNeighbour = false;
+                    int neighX = 0;
+                    for (int l = i+1; l < SIZE; l++) {
+                        if (!foundNeighbour) {
+                            if (mMatrix[l][j][k] != 0) {
+                                if (mMatrix[l][j][k] != mMatrix[i][j][k]) {
+                                    uncompNeighPresent = true;
+                                } else {
+                                    compNeighPresent = true;
+                                }
+                                neighX = l;
+                                foundNeighbour = true;
+                            }
+                        }
+                    }
+
+                    if (!uncompNeighPresent && !compNeighPresent) {
+                        swap(k, j, i, k, j, SIZE - 1);
+                    }
+                    if (uncompNeighPresent) {
+                        swap(k, j, i, k, j, neighX - 1);
+                    }
+                    if (compNeighPresent) {
+                        merge(k, j, i, k, j, neighX);
+                    }
+                }
+            }
+        }
+    }
+
+    public void moveForward() {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < SIZE; k++) {
+                for (int i = 0; i < SIZE; i++) {
+                    boolean isTile = mMatrix[i][j][k] != 0;
+                    if (!isTile) {
+                        continue;
+                    }
+
+                    boolean onMargin = i <= 0;
+                    if (onMargin) {
+                        continue;
+                    }
+
+                    boolean uncompNeighPresent = false;
+                    boolean compNeighPresent = false;
+                    boolean foundNeighbour = false;
+                    int neighX = 0;
+                    for (int l = i-1; l >= 0; l--) {
+                        if (!foundNeighbour) {
+                            if (mMatrix[l][j][k] != 0) {
+                                if (mMatrix[l][j][k] != mMatrix[i][j][k]) {
+                                    uncompNeighPresent = true;
+                                } else {
+                                    compNeighPresent = true;
+                                }
+                                neighX = l;
+                                foundNeighbour = true;
+                            }
+                        }
+                    }
+
+                    if (!uncompNeighPresent && !compNeighPresent) {
+                        swap(k, j, i, k, j, 0);
+                    }
+                    if (uncompNeighPresent) {
+                        swap(k, j, i, k, j, neighX + 1);
+                    }
+                    if (compNeighPresent) {
+                        merge(k, j, i, k, j, neighX);
+                    }
+                }
+            }
+        }
+    }
+
     private void swap(int x, int y, int z, int x1, int y1, int z1) {
         if (!(x == x1 && y == y1 && z == z1)) {
             mMatrix[z1][y1][x1] = mMatrix[z][y][x];
