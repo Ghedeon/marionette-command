@@ -10,10 +10,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TCPServer extends Thread {
 
-    private Socket tcpSocket;
+    private List<Thread> senderThreads = new ArrayList<Thread>();
+    private List<Sender> senders = new ArrayList<Sender>();
     private ServerSocket server;
     private Matrix matrix;
 
@@ -70,12 +73,28 @@ public class TCPServer extends Thread {
                     tcpServer.sendGameModel(mapGameModel());
                 }
             });
-            tcpServer.sendGameModel(mapGameModel());
-            controller.start();
+//            tcpServer.sendGameModel(mapGameModel());
+            boolean always = true;
+            while (always) {
+                matrix = new Matrix();
+                tcpServer.sendGameModel(mapGameModel());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+//            controller.start();
 
             tcpServer.closeServer();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendGameModel(GameModel gameModel) {
+        for (Sender sender : senders) {
+            sender.sendGameModel(gameModel);
         }
     }
 
@@ -91,59 +110,37 @@ public class TCPServer extends Thread {
     }
 
     private void waitConnection() throws IOException {
-        System.out.println("Waiting for connection...");
         server = new ServerSocket(6070);
-        tcpSocket = server.accept();
-        System.out.println("Server accepted connection.");
-    }
+        System.out.println("Waiting for connections...");
+        final boolean always = true;
 
-    public void sendGameModel(GameModel gameModel) {
-        try {
-            sendGameModelThrows(gameModel);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+        Runnable r = new Runnable() {
 
-    private void sendGameModelThrows(GameModel gameModel) throws IOException {
-        final DataOutputStream doStream = new DataOutputStream(new BufferedOutputStream(tcpSocket.getOutputStream()));
-        System.out.println("Writing :" + gameModel.getScore());
-        write3DMatrix(doStream, gameModel.getMatrix());
-        doStream.writeInt(gameModel.getScore());
-        doStream.writeInt(gameModel.getMaxTile());
-        doStream.writeInt(booleanToInt(gameModel.isGameOver()));
-        doStream.writeInt(booleanToInt(gameModel.isWon()));
-        writeAngles(doStream, gameModel.getAngles());
-        doStream.flush();
+            @Override
+            public void run() {
+                try {
+                    while (always) {
+                        Socket socket = server.accept();
+                        Sender sender = new Sender(socket);
+                        final Thread senderThread = new Thread(sender);
+                        senderThreads.add(senderThread);
+                        senders.add(sender);
+                        System.out.println("Server accepted a connection.");
+                        senderThread.start();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
     }
 
     private void closeServer() throws IOException {
-        tcpSocket.getOutputStream().close();
-        tcpSocket.close();
+        for (Thread t : senderThreads) {
+            t.interrupt();
+        }
         System.out.println("Server closed");
-    }
-
-    private void write3DMatrix(DataOutputStream doStream, int[][][] source) throws IOException {
-        final int size = 4;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                for (int k = 0; k < size; k++) {
-                    doStream.writeInt(source[i][j][k]);
-                }
-            }
-        }
-    }
-
-    private void writeAngles(DataOutputStream doStream, int[] angles) throws IOException {
-        for (int i = 0; i < 3; i++) {
-            doStream.writeInt(angles[i]);
-        }
-    }
-
-    private int booleanToInt(boolean b) {
-        if (b) {
-            return 1;
-        }
-        return 0;
     }
 }
