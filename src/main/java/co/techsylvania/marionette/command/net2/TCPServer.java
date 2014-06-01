@@ -73,19 +73,8 @@ public class TCPServer extends Thread {
                     tcpServer.sendGameModel(mapGameModel());
                 }
             });
-//            tcpServer.sendGameModel(mapGameModel());
-            boolean always = true;
-            while (always) {
-                matrix = new Matrix();
-                tcpServer.sendGameModel(mapGameModel());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-//            controller.start();
-
+            tcpServer.sendGameModel(mapGameModel());
+            controller.start();
             tcpServer.closeServer();
         } catch (IOException e) {
             e.printStackTrace();
