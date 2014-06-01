@@ -4,13 +4,17 @@ public class GameModel {
 
     private int[][][] matrix;
     private int score;
+    private int maxTile;
     private boolean isGameOver;
+    private boolean won;
     private int[] angles;
 
-    public GameModel(int[][][] matrix, int score, boolean isGameOver, int[] angles) {
+    public GameModel(int[][][] matrix, int score, int maxTile, boolean isGameOver, boolean won, int[] angles) {
         this.matrix = matrix;
         this.score = score;
         this.isGameOver = isGameOver;
+        this. maxTile = maxTile;
+        this.won = won;
         this.angles = angles;
     }
 
@@ -28,5 +32,13 @@ public class GameModel {
 
     public int[] getAngles() {
         return angles;
+    }
+
+    public int getMaxTile() {
+        return maxTile;
+    }
+
+    public boolean isWon() {
+        return won;
     }
 }

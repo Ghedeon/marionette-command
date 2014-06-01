@@ -1,6 +1,7 @@
 package co.techsylvania.marionette.command.game2048;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,7 @@ public class Matrix {
         init();
     }
 
-    public void init() {
+    private void init() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 for (int k = 0; k < SIZE; k++) {
@@ -351,6 +352,36 @@ public class Matrix {
             mMatrix[z1][y1][x1] = 2 * mMatrix[z][y][x];
             mMatrix[z][y][x] = 0;
         }
+    }
+
+    public int getScore() {
+        int s = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for (int k = 0; k < SIZE; k++) {
+                    s += mMatrix[i][j][k];
+                }
+            }
+        }
+        return s;
+    }
+
+    public int getMaxTile() {
+        int max = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for (int k = 0; k < SIZE; k++) {
+                    if (max < mMatrix[i][j][k]) {
+                        max = mMatrix[i][j][k];
+                    }
+                }
+            }
+        }
+        return max;
+    }
+
+    public int[][][] getMatrix() {
+        return mMatrix.clone();
     }
 
     public void print() {

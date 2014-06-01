@@ -16,36 +16,49 @@ public class TCPServer extends Thread {
         try {
             tcpServer.waitConnection();
 
-            tcpServer.sendCommands();
-
             tcpServer.closeServer();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void waitConnection() throws IOException {
+    private void waitConnection() throws IOException {
         server = new ServerSocket(6070);
         tcpSocket = server.accept();
         System.out.println("server accepted");
     }
 
-    public void sendCommands() throws IOException {
-        final ObjectOutputStream ooStream = new ObjectOutputStream(tcpSocket.getOutputStream());
-        for (int i = 0; i <10; i++) {
-            System.out.println("Writing CommandType.MOVE_LEFT");
-            ooStream.writeObject(new GameModel(new int[4][4][4], 4, false, new int[] {0, 0, 0}));
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    public boolean isConnected() {
+        return tcpSocket.isConnected();
     }
 
-    public void closeServer() throws IOException{
+    public void sendGameModel(GameModel gameModel) throws IOException {
+        final DataOutputStream doStream = new DataOutputStream(tcpSocket.getOutputStream());
+        System.out.println("Writing :" + gameModel.toString());
+
+        doStream.write();
+        write3DMatrix(, gameModel.getMatrix());
+
+
+
+    }
+
+    private void closeServer() throws IOException{
         tcpSocket.getOutputStream().close();
         tcpSocket.close();
         System.out.println("Server closed");
+    }
+
+    private void write3DMatrix(int[][][] source) {
+        final int size = 4;
+        byte[] flat = new byte[size * size * size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                for (int k = 0; k < size; k++) {
+                    flat[i * size * size + j * size + k] = (byte) source[i][j][k];
+                }
+            }
+        }
+        return flat;
     }
 }
