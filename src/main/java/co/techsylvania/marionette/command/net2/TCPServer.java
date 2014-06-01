@@ -1,6 +1,7 @@
 package co.techsylvania.marionette.command.net2;
 
 import co.techsylvania.marionette.command.game2048.GameModel;
+import co.techsylvania.marionette.command.game2048.Matrix;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -16,9 +17,27 @@ public class TCPServer extends Thread {
         try {
             tcpServer.waitConnection();
 
+            System.out.println("Sending random game states...");
+            boolean always = true;
+            while (always) {
+                final Matrix matrix = new Matrix();
+                final GameModel gameModel = new GameModel(matrix.getMatrix(),
+                        matrix.getScore(),
+                        matrix.getMaxTile(),
+                        false,
+                        matrix.isWon(),
+                        new int[] {0, 0, 0}
+                );
+                tcpServer.sendGameModel(gameModel);
 
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
-//            tcpServer.closeServer();
+            tcpServer.closeServer();
         } catch (IOException e) {
             e.printStackTrace();
         }
