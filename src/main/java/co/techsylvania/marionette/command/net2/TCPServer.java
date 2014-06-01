@@ -2,8 +2,11 @@ package co.techsylvania.marionette.command.net2;
 
 import co.techsylvania.marionette.command.game2048.GameModel;
 import co.techsylvania.marionette.command.game2048.Matrix;
+import co.techsylvania.marionette.command.leap.LeapController;
+import co.techsylvania.marionette.command.leap.LeapGestureListener;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -11,22 +14,70 @@ public class TCPServer extends Thread {
 
     private Socket tcpSocket;
     private ServerSocket server;
+    private Matrix matrix;
 
     public void run() {
         TCPServer tcpServer = new TCPServer();
         try {
             tcpServer.waitConnection();
 
-            System.out.println("Sending random game states...");
+            matrix = new Matrix();
+
+            LeapController controller = new LeapController(new LeapGestureListener() {
+                @Override
+                public void onGestureReceived(GestureType gesture) {
+                    switch (gesture) {
+                        case LEFT:
+                            System.out.println("LEFT");
+                            matrix.moveLeft();
+                            matrix.print();
+                            break;
+                        case RIGHT:
+                            System.out.println("RIGHT");
+                            matrix.moveRight();
+                            matrix.print();
+
+                            break;
+                        case UP:
+                            System.out.println("UP");
+                            matrix.moveUp();
+                            matrix.print();
+
+                            break;
+                        case DOWN:
+                            System.out.println("DOWN");
+                            matrix.moveDown();
+                            matrix.print();
+
+                            break;
+                        case PUSH:
+                            System.out.println("PUSH");
+                            matrix.moveBackward();
+                            matrix.print();
+
+                            break;
+                        case PULL:
+                            System.out.println("PULL");
+                            matrix.moveForward();
+                            matrix.print();
+
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+            controller.start();
+
+            /*System.out.println("Sending random game states...");
             boolean always = true;
             while (always) {
-                final Matrix matrix = new Matrix();
                 final GameModel gameModel = new GameModel(matrix.getMatrix(),
                         matrix.getScore(),
                         matrix.getMaxTile(),
                         false,
                         matrix.isWon(),
-                        new int[] {0, 0, 0}
+                        new int[]{0, 0, 0}
                 );
                 tcpServer.sendGameModel(gameModel);
 
@@ -35,7 +86,7 @@ public class TCPServer extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
 
             tcpServer.closeServer();
         } catch (IOException e) {
