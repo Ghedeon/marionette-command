@@ -5,6 +5,7 @@ import co.techsylvania.marionette.command.game2048.Matrix;
 import co.techsylvania.marionette.command.leap.LeapController;
 import co.techsylvania.marionette.command.leap.LeapGestureListener;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,7 +18,7 @@ public class TCPServer extends Thread {
     private Matrix matrix;
 
     public void run() {
-        TCPServer tcpServer = new TCPServer();
+        final TCPServer tcpServer = new TCPServer();
         try {
             tcpServer.waitConnection();
 
@@ -65,6 +66,15 @@ public class TCPServer extends Thread {
                         default:
                             break;
                     }
+
+                    final GameModel gameModel = new GameModel(matrix.getMatrix(),
+                            matrix.getScore(),
+                            matrix.getMaxTile(),
+                            false,
+                            matrix.isWon(),
+                            new int[]{0, 0, 0}
+                    );
+                    tcpServer.sendGameModel(gameModel);
                 }
             });
             controller.start();
