@@ -67,36 +67,11 @@ public class TCPServer extends Thread {
                             break;
                     }
 
-                    final GameModel gameModel = new GameModel(matrix.getMatrix(),
-                            matrix.getScore(),
-                            matrix.getMaxTile(),
-                            false,
-                            matrix.isWon(),
-                            new int[]{0, 0, 0}
-                    );
-                    tcpServer.sendGameModel(gameModel);
+                    tcpServer.sendGameModel(mapGameModel());
                 }
             });
+            tcpServer.sendGameModel(mapGameModel());
             controller.start();
-
-            /*System.out.println("Sending random game states...");
-            boolean always = true;
-            while (always) {
-                final GameModel gameModel = new GameModel(matrix.getMatrix(),
-                        matrix.getScore(),
-                        matrix.getMaxTile(),
-                        false,
-                        matrix.isWon(),
-                        new int[]{0, 0, 0}
-                );
-                tcpServer.sendGameModel(gameModel);
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }*/
 
             tcpServer.closeServer();
         } catch (IOException e) {
@@ -104,15 +79,22 @@ public class TCPServer extends Thread {
         }
     }
 
+    private GameModel mapGameModel() {
+        final GameModel gameModel = new GameModel(matrix.getMatrix(),
+                matrix.getScore(),
+                matrix.getMaxTile(),
+                false,
+                matrix.isWon(),
+                new int[]{0, 0, 0}
+        );
+        return gameModel;
+    }
+
     private void waitConnection() throws IOException {
         System.out.println("Waiting for connection...");
         server = new ServerSocket(6070);
         tcpSocket = server.accept();
         System.out.println("Server accepted connection.");
-    }
-
-    public boolean isConnected() {
-        return tcpSocket != null && tcpSocket.isConnected();
     }
 
     public void sendGameModel(GameModel gameModel) {
