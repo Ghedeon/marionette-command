@@ -5,8 +5,6 @@ import co.techsylvania.marionette.command.game2048.Matrix;
 import co.techsylvania.marionette.command.leap.LeapController;
 import co.techsylvania.marionette.command.leap.LeapGestureListener;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,14 +16,12 @@ public class TCPServer extends Thread {
     private List<Thread> senderThreads = new ArrayList<Thread>();
     private List<Sender> senders = new ArrayList<Sender>();
     private ServerSocket server;
-    private Matrix matrix;
+    private Matrix matrix = new Matrix();
 
     public void run() {
         final TCPServer tcpServer = new TCPServer();
         try {
             tcpServer.waitConnection();
-
-            matrix = new Matrix();
 
             LeapController controller = new LeapController(new LeapGestureListener() {
                 @Override
@@ -34,36 +30,36 @@ public class TCPServer extends Thread {
                         case LEFT:
                             System.out.println("LEFT");
                             matrix.moveLeft();
-                            matrix.print();
+//                            matrix.print();
                             break;
                         case RIGHT:
                             System.out.println("RIGHT");
                             matrix.moveRight();
-                            matrix.print();
+//                            matrix.print();
 
                             break;
                         case UP:
                             System.out.println("UP");
                             matrix.moveUp();
-                            matrix.print();
+//                            matrix.print();
 
                             break;
                         case DOWN:
                             System.out.println("DOWN");
                             matrix.moveDown();
-                            matrix.print();
+//                            matrix.print();
 
                             break;
                         case PUSH:
                             System.out.println("PUSH");
                             matrix.moveBackward();
-                            matrix.print();
+//                            matrix.print();
 
                             break;
                         case PULL:
                             System.out.println("PULL");
                             matrix.moveForward();
-                            matrix.print();
+//                            matrix.print();
 
                             break;
                         default:
@@ -116,6 +112,7 @@ public class TCPServer extends Thread {
                         senders.add(sender);
                         System.out.println("Server accepted a connection.");
                         senderThread.start();
+                        sender.sendGameModel(mapGameModel());
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();

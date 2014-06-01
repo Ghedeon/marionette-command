@@ -22,11 +22,11 @@ class LeapListener extends Listener {
     }
 
     public void onInit(Controller controller) {
-        System.out.println("Initialized");
+        System.out.println("LM initialized");
     }
 
     public void onConnect(Controller controller) {
-        System.out.println("Connected");
+        System.out.println("LM connected");
         controller.enableGesture(Gesture.Type.TYPE_SWIPE);
         controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
@@ -35,11 +35,11 @@ class LeapListener extends Listener {
 
     public void onDisconnect(Controller controller) {
         //Note: not dispatched when running in a debugger.
-        System.out.println("Disconnected");
+        System.out.println("LM disconnected");
     }
 
     public void onExit(Controller controller) {
-        System.out.println("Exited");
+        System.out.println("LM exited");
     }
 
     public void onFrame(Controller controller) {
