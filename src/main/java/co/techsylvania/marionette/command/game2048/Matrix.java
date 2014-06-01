@@ -5,6 +5,7 @@ import java.util.Random;
 public class Matrix {
 
     private static final int SIZE = 4;
+    private static final int N_START_TILES = 4;
     private int mValues[] = new int[]{0, 2, 4};
     private int[][][] mMatrix = new int[SIZE][SIZE][SIZE];
     private Random mRandom = new Random(System.currentTimeMillis());
@@ -17,10 +18,26 @@ public class Matrix {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 for (int k = 0; k < SIZE; k++) {
-                    mMatrix[i][j][k] = mValues[mRandom.nextInt(mValues.length)];
+                    mMatrix[i][j][k] = 0;
                 }
             }
         }
+
+        int nStartTiles = 0;
+        while (nStartTiles < N_START_TILES) {
+            int x = mRandom.nextInt(SIZE);
+            int y = mRandom.nextInt(SIZE);
+            int z = mRandom.nextInt(SIZE);
+            if (mMatrix[z][y][x] == 0) {
+                int value = 2;
+                if (mRandom.nextDouble() < 0.2) {
+                    value = 4;
+                }
+                mMatrix[z][y][x] = value;
+                nStartTiles++;
+            }
+        }
+
     }
 
     public void moveRight() {
