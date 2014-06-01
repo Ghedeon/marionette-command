@@ -63,11 +63,10 @@ public class TCPServer extends Thread {
     }
 
     private void sendGameModelThrows(GameModel gameModel) throws IOException {
-        final DataOutputStream doStream = new DataOutputStream(tcpSocket.getOutputStream());
+        final DataOutputStream doStream = new DataOutputStream(new BufferedOutputStream(tcpSocket.getOutputStream()));
         System.out.println("Writing :" + gameModel.getScore());
         write3DMatrix(doStream, gameModel.getMatrix());
         doStream.writeInt(gameModel.getScore());
-        doStream.writeInt(gameModel.getMaxTile());
         doStream.writeInt(gameModel.getMaxTile());
         doStream.writeInt(booleanToInt(gameModel.isGameOver()));
         doStream.writeInt(booleanToInt(gameModel.isWon()));
