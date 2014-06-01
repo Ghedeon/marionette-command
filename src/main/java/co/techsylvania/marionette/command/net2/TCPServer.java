@@ -16,7 +16,7 @@ public class TCPServer extends Thread {
     private List<Thread> senderThreads = new ArrayList<Thread>();
     private List<Sender> senders = new ArrayList<Sender>();
     private ServerSocket server;
-    private Matrix matrix = new Matrix();
+    private Matrix matrix = Matrix.getInstance();
 
     public void run() {
         final TCPServer tcpServer = new TCPServer();
@@ -69,7 +69,7 @@ public class TCPServer extends Thread {
                     tcpServer.sendGameModel(mapGameModel());
                 }
             });
-            tcpServer.sendGameModel(mapGameModel());
+//            tcpServer.sendGameModel(mapGameModel());
             controller.start();
             tcpServer.closeServer();
         } catch (IOException e) {
@@ -129,4 +129,5 @@ public class TCPServer extends Thread {
         }
         System.out.println("Server closed");
     }
+
 }

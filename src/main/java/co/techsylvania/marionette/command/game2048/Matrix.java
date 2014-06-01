@@ -11,13 +11,22 @@ public class Matrix {
     private static final int SIZE = 4;
     private static final int N_START_TILES = 4;
     private static final double FOUR_PROBABILITY = 0.1;
+    private static Matrix instance;
     private int[][][] mMatrix = new int[SIZE][SIZE][SIZE];
     private Random mRandom = new Random(System.currentTimeMillis());
 
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public Matrix() {
+    private Matrix() {
         init();
+    }
+
+    public static synchronized Matrix getInstance() {
+        if (instance == null) {
+            instance = new Matrix();
+        }
+
+        return instance;
     }
 
     private void init() {
