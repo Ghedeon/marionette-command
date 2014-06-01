@@ -1,11 +1,15 @@
 package co.techsylvania.marionette.command.game2048;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Matrix {
 
     private static final int SIZE = 4;
     private static final int N_START_TILES = 4;
+    private static final double FOUR_PROBABILITY = 0.1;
     private int mValues[] = new int[]{0, 2, 4};
     private int[][][] mMatrix = new int[SIZE][SIZE][SIZE];
     private Random mRandom = new Random(System.currentTimeMillis());
@@ -25,19 +29,31 @@ public class Matrix {
 
         int nStartTiles = 0;
         while (nStartTiles < N_START_TILES) {
-            int x = mRandom.nextInt(SIZE);
-            int y = mRandom.nextInt(SIZE);
-            int z = mRandom.nextInt(SIZE);
-            if (mMatrix[z][y][x] == 0) {
-                int value = 2;
-                if (mRandom.nextDouble() < 0.2) {
-                    value = 4;
+            insertNewTile();
+            nStartTiles++;
+        }
+    }
+
+    private void insertNewTile() {
+        List<int[]> freeCoordinates = new ArrayList<int[]>();
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for (int k = 0; k < SIZE; k++) {
+                    if (mMatrix[i][j][k] == 0) {
+                        freeCoordinates.add(new int[] {i, j, k});
+                    }
                 }
-                mMatrix[z][y][x] = value;
-                nStartTiles++;
             }
         }
+        Collections.shuffle(freeCoordinates);
 
+        int value = 2;
+        if (mRandom.nextDouble() < FOUR_PROBABILITY) {
+            value = 4;
+        }
+
+        int[] newTileCoordinates = freeCoordinates.get(0);
+        mMatrix[newTileCoordinates[0]][newTileCoordinates[1]][newTileCoordinates[2]] = value;
     }
 
     public void moveRight() {
@@ -85,6 +101,7 @@ public class Matrix {
                 }
             }
         }
+        insertNewTile();
     }
 
     public void moveLeft() {
@@ -132,6 +149,7 @@ public class Matrix {
                 }
             }
         }
+        insertNewTile();
     }
 
     public void moveDown() {
@@ -178,6 +196,7 @@ public class Matrix {
                 }
             }
         }
+        insertNewTile();
     }
 
     public void moveUp() {
@@ -224,6 +243,7 @@ public class Matrix {
                 }
             }
         }
+        insertNewTile();
     }
 
     public void moveBackward() {
@@ -270,6 +290,7 @@ public class Matrix {
                 }
             }
         }
+        insertNewTile();
     }
 
     public void moveForward() {
@@ -316,6 +337,7 @@ public class Matrix {
                 }
             }
         }
+        insertNewTile();
     }
 
     private void swap(int x, int y, int z, int x1, int y1, int z1) {
