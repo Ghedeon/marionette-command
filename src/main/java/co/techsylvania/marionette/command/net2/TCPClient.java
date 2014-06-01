@@ -1,17 +1,11 @@
 package co.techsylvania.marionette.command.net2;
 
-import co.techsylvania.marionette.command.commands.Command;
+import co.techsylvania.marionette.command.game2048.GameModel;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Scanner;
-
 
 public class TCPClient extends Thread {
 
@@ -40,11 +34,11 @@ public class TCPClient extends Thread {
         final ObjectInputStream oiStream = new ObjectInputStream(client_socket.getInputStream());
         boolean tocontinue = true;
         while (tocontinue) {
-            Command command = (Command) oiStream.readObject();
-            if (command == null) {
+            GameModel gameModel = (GameModel) oiStream.readObject();
+            if (gameModel == null) {
                 continue;
             }
-            System.out.println("Recd: " + command.getCommandType().name());
+            System.out.println("Recd: " + gameModel.getScore());
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {

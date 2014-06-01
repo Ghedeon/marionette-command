@@ -1,13 +1,10 @@
 package co.techsylvania.marionette.command.net2;
 
-import co.techsylvania.marionette.command.commands.Command;
-import co.techsylvania.marionette.command.commands.CommandType;
+import co.techsylvania.marionette.command.game2048.GameModel;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class TCPServer extends Thread {
 
@@ -37,7 +34,7 @@ public class TCPServer extends Thread {
         final ObjectOutputStream ooStream = new ObjectOutputStream(tcpSocket.getOutputStream());
         for (int i = 0; i <10; i++) {
             System.out.println("Writing CommandType.MOVE_LEFT");
-            ooStream.writeObject(new Command(CommandType.MOVE_LEFT, new byte[0]));
+            ooStream.writeObject(new GameModel(new int[4][4][4], 4, false, new int[] {0, 0, 0}));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

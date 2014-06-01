@@ -10,7 +10,6 @@ public class Matrix {
     private static final int SIZE = 4;
     private static final int N_START_TILES = 4;
     private static final double FOUR_PROBABILITY = 0.1;
-    private int mValues[] = new int[]{0, 2, 4};
     private int[][][] mMatrix = new int[SIZE][SIZE][SIZE];
     private Random mRandom = new Random(System.currentTimeMillis());
 

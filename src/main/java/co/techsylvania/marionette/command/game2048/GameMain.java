@@ -12,5 +12,7 @@ public class GameMain {
 
         System.out.println("after");
         matrix.print();
+
+
     }
 }
